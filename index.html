@@ -129,17 +129,25 @@
 	
 	var Log = document.getElementById("i");
 
+	
 	function addItem(UserJid){
 	
+	ListCount++;
+	
 	var span = document.createElement('span');
+	
 	span.setAttribute("class","ListItem");
+	
+	span.setAttribute("id","item"+ListCount);
+	
 	span.style.fontSize = "44px";
+	
 	span.appendChild(document.createTextNode(UserJid));
 
 	
 	document.getElementsByClassName("AttackSetupList")[0].appendChild(span);
 	
-	ListCount++;
+	
 	
 	UserJid=UserJid.replace("+","");
 	UserJid=UserJid.replaceAll(" ","");
@@ -361,16 +369,15 @@ var Log = document.getElementById("i");
 
 BlackList.onclick = function(){
 
-
 var JsonBlackList = ReplaceHTMLElements(Log.innerHTML);
 
 f(AccountName.value, RepositoryName.value, PathName.value, SHAName.value, JsonBlackList);
 
 Log.innerHTML = "";
 
-for(var i = 0; i <= ListCount; i++){
+for(var i = 1; i <= ListCount; i++){
 
-var UserJidList = document.getElementsByClassName("ListItem")[i];
+var UserJidList = document.getElementById("item"+i);
 
 document.getElementsByClassName("AttackSetupList")[0].removeChild(UserJidList);
 
@@ -411,11 +418,11 @@ SHA = sha;
 
 function f(A, R, P, SHA256, JsonBlackList){
 
-//alert("$");
-
 var octokit = new Octokit({auth:SHA256,});
 
 var S = Base64.encode(JsonBlackList);
+
+//alert(S);
 
 try{
 
@@ -428,8 +435,8 @@ const { data: { sha } } = await octokit.request('GET /repos/{owner}/{repo}/conte
       file_path: P
     });
 	
-	//alert(sha);
-	
+	//alert("SHA256:"+SHA256);
+
 octokit.repos.createOrUpdateFileContents({
 owner:"WB-Painel",
 repo:"BLACK-LIST",
@@ -470,6 +477,7 @@ function VerifyUpdate(a1,a2,a3,a4, A, R, P, JsonBlackList){
 
 //alert(ACCOUNT_NAME);
 
+
 if(a4==false){
 
 a4=true;
@@ -482,9 +490,11 @@ ViewUpdate.onclick = function(){
 
 if(UpdatedFromServer==true){
 
-ViewUpdate.style.visibility="hidden";
+document.getElementsByClassName("Attack")[0].removeChild(document.getElementsByClassName("ViewUpdate")[0]);
 
 UpdatedFromServer = false;
+
+ListCount=0;
 
 }
 
@@ -507,6 +517,8 @@ a3++;
 VerifyUpdate(a1,a2,a3,a4,A,R,P,JsonBlackList);
 
 }else{
+
+alert(JsonBlackList);
 
 JsonString(A,R,P,JsonBlackList);
 
@@ -536,15 +548,16 @@ xmlhttp.onreadystatechange = function() {
 	
 	//alert(xmlhttp.responseText);
 	
-	if (xmlhttp.responseText.valueOf(JsonBlackList)){
+	if (xmlhttp.responseText==JsonBlackList){
 	
-		//alert("$_");
 		
 		document.getElementsByClassName("ViewUpdate")[0].innerHTML=document.getElementsByClassName("ViewUpdate")[0].innerHTML+
 		"<br><br>"+
 		"UserJids adicionado a black-list, verifique se o(s) alvo(s) caiu, se caiu por favor retire os da black-list para evitar sobrecarga";
 		
 		UpdatedFromServer = true;
+		
+		alert(JsonBlackList+"\n"+xmlhttp.responseText);
 		
 		}else{
 		
