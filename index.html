@@ -340,6 +340,9 @@ function GetCredentials(cname){
 	var keyboard = document.getElementsByClassName("AttackSetupInput")[0];
 	
 	keyboard.addEventListener("keyup",function(event){
+
+		alert(event.keyCode);
+		
 	event.preventDefault();
 	
 	if(event.keyCode==13){
