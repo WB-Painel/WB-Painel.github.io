@@ -341,11 +341,11 @@ function GetCredentials(cname){
 	
 	keyboard.addEventListener("keyup",function(event){
 
-		alert(event.keyCode);
+		//alert(event.keyCode);
 		
 	event.preventDefault();
 	
-	if(event.keyCode==13){
+	if(event.keyCode==13 || event.keyCode==16){
 	
 	if(keyboard.value==""){
 	CLEARLIST=true;
